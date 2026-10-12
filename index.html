@@ -50,7 +50,7 @@ if(has(["slow","cold","calm","menac","bitter"]))speed-=.15;if(has(["fast","excit
 if(has(["whisper","breathy","hushed"]))breath=.5;if(has(["echo","hall","church","cave","greenhouse"]))echo=.5;
 set({voice,pitch,speed:Math.max(.6,Math.min(1.4,speed)).toFixed(2),breath,echo});$("status").textContent="Designed: "+VOICES[voice]+". Tap Generate.";};
 let tts,out;
-const dev=navigator.gpu?"webgpu":"wasm";
+const dev=(navigator.gpu&&location.search.includes("gpu"))?"webgpu":"wasm";
 try{tts=await KokoroTTS.from_pretrained("onnx-community/Kokoro-82M-v1.0-ONNX",{dtype:dev=="webgpu"?"fp32":"q8",device:dev,progress_callback:p=>{if(p.progress)$("go").textContent=`Loading voice engine… ${Math.round(p.progress)}%`}});}
 catch(e){if(dev=="webgpu")tts=await KokoroTTS.from_pretrained("onnx-community/Kokoro-82M-v1.0-ONNX",{dtype:"q8",device:"wasm"});else{$("status").textContent="Engine failed: "+e;throw e}}
 $("go").textContent="Generate";$("go").disabled=false;window.__ready=true;
